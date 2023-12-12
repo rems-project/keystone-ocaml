@@ -1,0 +1,10 @@
+(library
+  (name keystone)
+  (public_name keystone)
+  (synopsis "The Keystone Engine assembler")
+  (wrapped false)
+  (foreign_stubs
+    (language c)
+    (names keystone_stubs)
+    (flags (:standard -Wall -Wextra -O3)))
+  (c_library_flags (-lkeystone -lstdc++)))
