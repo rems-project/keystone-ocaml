@@ -1,0 +1,4 @@
+(test
+  (name sample)
+  (modules sample)
+  (libraries keystone fmt))
