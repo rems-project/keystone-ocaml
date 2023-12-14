@@ -4,30 +4,40 @@
     the {{: https://www.keystone-engine.org}website}, or [keystone.h] from the
     library distribution. *)
 
-type arch = ARM | ARM64 | MIPS | X86 | PPC | SPARC | SYSTEMZ | HEXAGON | EVM
+type _ arch =
+| ARM     : [`ARM] arch
+| ARM64   : [`ARM64] arch
+| MIPS    : [`MIPS] arch
+| X86     : [`X86] arch
+| PPC     : [`PPC] arch
+| SPARC   : [`SPARC] arch
+| SYSTEMZ : [`SYSTEMZ] arch
+| HEXAGON : [`HEXAGON] arch
+| EVM     : [`EVM] arch
 (** Architecture type.
 
     For more details, please consult [ks_arch] in [keystone.h]. *)
 
-type mode =
-| BIG_ENDIAN  (** Big-endian mode *)
-| ARM         (** ARM — ARM mode *)
-| THUMB       (** ARM — THUMB mode (including Thumb-2) *)
-| V8          (** ARM — ARMv8 A32 encodings for ARM *)
-| MICRO       (** MIPS — MicroMips mode *)
-| MIPS3       (** MIPS — Mips III ISA *)
-| MIPS32R6    (** MIPS — Mips32r6 ISA *)
-| MIPS32      (** MIPS — Mips32 ISA *)
-| MIPS64      (** MIPS — Mips64 ISA *)
-| X86_16      (** X86 — 16-bit mode *)
-| X86_32      (** X86 — 32-bit mode *)
-| X86_64      (** X86 — 64-bit mode *)
-| PPC32       (** PPC — 32-bit mode *)
-| PPC64       (** PPC — 64-bit mode *)
-| QPX         (** PPC — Quad Processing eXtensions mode *)
-| SPARC32     (** SPARC — 32-bit mode *)
-| SPARC64     (** SPARC — 64-bit mode *)
-| V9          (** SPARC — SparcV9 mode *)
+type _ mode =
+| BIG_ENDIAN : [< `ARM | `HEXAGON | `SYSTEMZ | `SPARC | `MIPS | `PPC ] mode
+  (** Big-endian mode (defaults to little-endian) *)
+| ARM      : [`ARM] mode   (** ARM mode *)
+| THUMB    : [`ARM] mode   (** THUMB mode (including Thumb-2) *)
+| V8       : [`ARM] mode   (** ARMv8 A32 encodings for ARM *)
+| MICRO    : [`MIPS] mode  (** MicroMips mode *)
+| MIPS3    : [`MIPS] mode  (** Mips III ISA *)
+| MIPS32R6 : [`MIPS] mode  (** Mips32r6 ISA *)
+| MIPS32   : [`MIPS] mode  (** Mips32 ISA *)
+| MIPS64   : [`MIPS] mode  (** Mips64 ISA *)
+| X86_16   : [`X86] mode   (** 16-bit mode *)
+| X86_32   : [`X86] mode   (** 32-bit mode *)
+| X86_64   : [`X86] mode   (** 64-bit mode *)
+| PPC32    : [`PPC] mode   (** 32-bit mode *)
+| PPC64    : [`PPC] mode   (** 64-bit mode *)
+| QPX      : [`PPC] mode   (** Quad Processing eXtensions mode *)
+| SPARC32  : [`SPARC] mode (** 32-bit mode *)
+| SPARC64  : [`SPARC] mode (** 64-bit mode *)
+| V9       : [`SPARC] mode (** SparcV9 mode *)
 (** Mode.
 
     For more details, please consult [ks_mode] in [keystone.h]. *)
@@ -45,11 +55,11 @@ type syntax =
 
 val version : int * int
 
-val arch_supported : arch -> bool
+val arch_supported : _ arch -> bool
 
 type engine
 
-val create : ?syntax:syntax list -> arch -> mode list -> engine
+val create : ?syntax:syntax list -> 'a arch -> 'a mode list -> engine
 (** [create ~syntax arch modes] is a new {{!engine}assembler} instance.
 
     [arch] determines the architecture, [modes] the assembler mode(s), and
