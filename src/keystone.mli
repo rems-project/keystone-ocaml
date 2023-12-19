@@ -61,6 +61,7 @@ type engine
 
 val create : ?syntax:syntax list -> 'a arch -> 'a mode list -> engine
 (** [create ~syntax arch modes] is a new {{!engine}assembler} instance.
+    [create] corresponds to [ks_open].
 
     [arch] determines the architecture, [modes] the assembler mode(s), and
     [syntax] the syntax flags. Not all modes and not all syntax flags are
@@ -68,11 +69,13 @@ val create : ?syntax:syntax list -> 'a arch -> 'a mode list -> engine
 
     @raise Invalid_argument on illegal option combinations. *)
 
-val asm : ?addr:int -> engine -> string -> string * int
-(** [asm ~addr engine program] is [(encoding, stmts)], where [encoding] is the
-    binary encoding of instructions, and [stmts] is the number of processed
-    statements, obtained by processing the assembly [program] starting at an
-    offset [addr], and using the configured assembler instance [engine].
+val asm : ?addr:int -> engine -> string -> (string * int, [`Msg of string]) result
+(** [asm ~addr engine program] assembles the [program]. It corresponds to
+    [ks_asm].
 
-    @raise Invalid_argument on malformed [program].
-    *)
+    On success, it is [Ok (encoding, stmts)], where [encoding] is the binary
+    encoding of instructions given in [program], starting from [addr], and
+    [stmts] is the number of processed statements.
+
+    On error, it is [Error (`Msg msg)], where [msg] is an unspecified
+    descriptive message. Errors are caused by ill-formed [program]s. *)

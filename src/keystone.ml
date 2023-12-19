@@ -36,4 +36,6 @@ let create ?syntax arch mode =
   let t = create0 arch mode in
   (match syntax with Some s -> set_syntax t s | _ -> ());
   t
-let asm ?(addr = 0) t prg = asm0 t prg addr
+let asm ?(addr = 0) t prg = match asm0 t prg addr with
+| exception Invalid_argument msg -> Error (`Msg msg)
+| v -> Ok v

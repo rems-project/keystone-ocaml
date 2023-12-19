@@ -1,11 +1,14 @@
 open Keystone
 
+let pp_ok = Fmt.(Dump.pair (octets () |> on_string) int)
+let pp_err = Fmt.(using (fun (`Msg m) -> m) string)
+let pp_res = Fmt.Dump.result ~ok:pp_ok ~error:pp_err
+
 let test ?syntax arch mode prg =
   Format.printf "%s  =>  %!" prg;
   if not (Keystone.arch_supported arch) then Fmt.pr "ARCH UNSUPPORTED@." else
   let t = create arch mode ?syntax in
-  let code, _ = asm t prg in
-  Fmt.pr "@[%a@]@." Fmt.(octets () |> on_string) code
+  asm t prg |> Fmt.pr "@[%a@]@." pp_res
 
 let _ =
 
