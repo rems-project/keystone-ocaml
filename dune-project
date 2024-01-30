@@ -3,7 +3,7 @@
 
 (generate_opam_files)
 
-(source (github rems-project/ocaml-keystone-engine))
+(source (github rems-project/keystone-ocaml))
 (maintainers "dk505@cl.cam.ac.uk")
 
 (package
